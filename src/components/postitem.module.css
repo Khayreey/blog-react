@@ -1,0 +1,41 @@
+.container {
+ width: 100%;      
+ display: flex;
+ justify-content: center;
+}
+.main {
+  width: 95%;
+  background-color: white;
+  border-radius: 1.2rem;
+  margin: .5rem;
+  padding-right: .5rem;
+  padding-left: .5rem;
+  display: flex;
+  flex-direction: column;
+}
+.main p {
+  font-size: 2.2rem;
+  color: black;
+  font-weight: 800;
+}
+.userData {
+  display: flex ;
+  align-items: center;
+  
+}
+.userData img {
+    width : 6rem;
+    height : 6rem;
+    border-radius: 50%;
+    margin-right : .2rem;
+}
+.userData p {
+    font-size: 1.5rem;
+    color:#232849;
+    margin-right : auto ;
+}
+.delete {
+  font-size: 2.2rem;
+  color: #232849;
+  cursor: pointer;
+}
