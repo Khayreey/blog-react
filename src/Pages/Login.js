@@ -2,7 +2,7 @@ import React from 'react'
 import {FcGoogle} from 'react-icons/fc'
 import styles from './login.module.css'
 import { auth , provider } from '../firebase-config'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup  } from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
 function Login({setAuth}) {
   let navigate = useNavigate()

@@ -1,14 +1,16 @@
-import React , {useState } from  'react'
+import React , { useState , useEffect} from  'react'
 import {BrowserRouter , Routes , Route , Link} from 'react-router-dom'
 import Home from './Pages/Home'
 import Login from './Pages/Login'
 import { signOut } from 'firebase/auth'
 import styles from './app.module.css'
-import {auth} from './firebase-config'
+import {auth , db} from './firebase-config'
 import  {HiOutlineLogout , HiOutlineLogin} from 'react-icons/hi'
 import SignOutForm from './forms/SignOutForm'
 import CreatePostForm from './forms/CreatePostForm'
 import YourPosts from './Pages/YourPosts'
+import { getDocs , collection, doc, deleteDoc } from 'firebase/firestore'
+
 
 
 function App() {
@@ -17,7 +19,34 @@ function App() {
   const [createPostClicked , setCreatePostClicked] = useState(false)
   const [postsList , setPostsList] = useState([])
   
+  //const [yourPosts , setYourPostsList] = useState([])
+  
+  const deletePostHandler = async (id)=> {
+    const postDoc = doc(db , "posts" , id)
+    await deleteDoc(postDoc)
+    setPostsList((prev)=> {
+        return [...prev.filter((e)=> e.id !== id)]
+    })
+}
 
+const postCollectionRef = collection(db , "posts")
+//   const deletePostHandler = async (id)=> {
+//     const postDoc = doc(db , "posts" , id)
+//     await deleteDoc(postDoc)
+// }
+  useEffect(()=> {
+    const getData = async ()=> {
+        const data = await getDocs(postCollectionRef)
+        setPostsList(data.docs.map((d)=> ({ ...d.data() , id : d.id })))
+    };
+    getData()
+  })
+
+//  const filterdHandler = ()=> {
+//     const yourPosts = [...postsList]
+//     const posts = yourPosts.filter((e)=> e.userId === auth.currentUser.uid)
+//     setPostsList(posts)  
+//  }
   const signOutHandler = ()=> {
     
     setSignOutClicked(true)
@@ -38,10 +67,7 @@ function App() {
   const hideCreatePostHandler = ()=> {
     setCreatePostClicked(false)
   }
-  // const yourPostsHandler = ()=> {
-  //   const yourPosts = [...postsList]
-  //    setPostsList(yourPosts.filter((p)=> p.userId === auth.currentUser.uid))
-  // }
+ 
 
   return (
     <BrowserRouter>
@@ -59,8 +85,8 @@ function App() {
     </>
         
         <Routes>
-            <Route path='/' element={<Home setPostsList={setPostsList} postsList={postsList}></Home>}></Route>
-            <Route path='/yourPosts' element={<YourPosts  postsList={postsList} ></YourPosts>} ></Route>
+            <Route path='/' element={<Home setPostsList={setPostsList} postsList={postsList}  deletePostHandler={deletePostHandler} ></Home>}></Route>
+            <Route path='/yourPosts' element={<YourPosts setPostsList={setPostsList} postsList={postsList} deletePostHandler={deletePostHandler}></YourPosts>} ></Route>
             <Route path='/login' element={<Login setAuth={setIsAuth}></Login>}></Route>
         </Routes>
     </BrowserRouter>
